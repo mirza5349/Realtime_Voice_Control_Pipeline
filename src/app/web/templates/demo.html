@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>local-voice-ai-pipeline demo</title>
+    <link rel="stylesheet" href="/static/demo.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Local Voice AI Pipeline</h1>
+      <p id="service-info" class="service-info">loading configuration...</p>
+    </header>
+
+    <main class="layout">
+      <section class="panel" aria-labelledby="session-heading">
+        <h2 id="session-heading">Session controls</h2>
+        <div class="row">
+          <button id="btn-create-session" type="button">Create session</button>
+          <button id="btn-connect-ws" type="button" disabled>Open websocket</button>
+          <button id="btn-disconnect-ws" type="button" disabled>Close websocket</button>
+        </div>
+        <div class="row muted">
+          <span>session_id:</span>
+          <code id="session-id">-</code>
+          <span>status:</span>
+          <code id="session-status">-</code>
+          <span>ws:</span>
+          <code id="ws-status">closed</code>
+        </div>
+        <div class="row">
+          <div class="chip-group" id="provider-chips"></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="upload-heading">
+        <h2 id="upload-heading">Audio upload</h2>
+        <div class="row">
+          <input type="file" id="audio-file" accept="audio/*" />
+          <button id="btn-upload" type="button" disabled>Upload audio</button>
+        </div>
+        <div class="row">
+          <label for="sample-select">Or use a bundled sample:</label>
+          <select id="sample-select"></select>
+          <button id="btn-upload-sample" type="button" disabled>Upload sample</button>
+        </div>
+        <div class="row" id="upload-status"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="mic-heading">
+        <h2 id="mic-heading">Live microphone</h2>
+        <div class="row">
+          <button id="btn-mic-start" type="button" disabled>Start microphone</button>
+          <button id="btn-mic-stop" type="button" disabled>Stop microphone</button>
+          <label class="toggle">
+            <input type="checkbox" id="chk-autoplay" />
+            <span>autoplay assistant audio</span>
+          </label>
+        </div>
+        <div class="row muted">
+          <span>mic:</span>
+          <code id="mic-state">idle</code>
+          <span>processing:</span>
+          <code id="mic-processing">idle</code>
+          <span>voice:</span>
+          <code id="mic-voice">-</code>
+          <span>queue:</span>
+          <code id="mic-queue">0</code>
+        </div>
+        <div class="row" id="mic-status"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="assistant-heading">
+        <h2 id="assistant-heading">Assistant response</h2>
+        <p class="transcript-label">transcript:</p>
+        <pre id="transcript-text" class="response-text">-</pre>
+        <p class="assistant-label">assistant text:</p>
+        <pre id="assistant-text" class="response-text">-</pre>
+        <div class="row">
+          <audio id="assistant-audio" controls preload="none"></audio>
+          <a id="assistant-audio-link" href="#" target="_blank" rel="noopener">asset link</a>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="simulator-heading">
+        <h2 id="simulator-heading">Simulator state</h2>
+        <dl class="kv">
+          <dt>heading_deg</dt><dd id="sim-heading">-</dd>
+          <dt>velocity</dt><dd id="sim-velocity">-</dd>
+          <dt>is_moving</dt><dd id="sim-is-moving">-</dd>
+          <dt>last_action</dt><dd id="sim-last-action">-</dd>
+          <dt>updated_at</dt><dd id="sim-updated-at">-</dd>
+        </dl>
+      </section>
+
+      <section class="panel" aria-labelledby="latency-heading">
+        <h2 id="latency-heading">Latency metrics</h2>
+        <dl class="kv">
+          <dt>transcription</dt><dd id="lat-transcription">-</dd>
+          <dt>llm</dt><dd id="lat-llm">-</dd>
+          <dt>execution</dt><dd id="lat-execution">-</dd>
+          <dt>tts</dt><dd id="lat-tts">-</dd>
+          <dt>end_to_end</dt><dd id="lat-end-to-end">-</dd>
+        </dl>
+      </section>
+
+      <section class="panel timeline-panel" aria-labelledby="timeline-heading">
+        <h2 id="timeline-heading">Websocket event timeline</h2>
+        <div class="row">
+          <button id="btn-clear-timeline" type="button">Clear timeline</button>
+          <span id="timeline-count" class="muted">0 events</span>
+        </div>
+        <ol id="timeline" class="timeline"></ol>
+      </section>
+    </main>
+
+    <script src="/static/live_audio.js"></script>
+    <script src="/static/demo.js"></script>
+  </body>
+</html>

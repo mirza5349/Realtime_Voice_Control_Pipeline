@@ -1,0 +1,262 @@
+:root {
+  --bg: #0f172a;
+  --bg-elevated: #1e293b;
+  --border: #334155;
+  --fg: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --success: #4ade80;
+  --danger: #f87171;
+  --warning: #facc15;
+  --mono: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.app-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.app-header h1 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  letter-spacing: 0.3px;
+}
+
+.service-info {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px 24px 24px 24px;
+}
+
+.timeline-panel {
+  grid-column: 1 / -1;
+}
+
+.panel {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.panel h2 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  color: var(--accent);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.row.muted,
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+button {
+  background: var(--accent);
+  color: #0b1020;
+  border: none;
+  padding: 6px 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+button[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
+
+input[type="file"],
+select {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+code {
+  font-family: var(--mono);
+  background: rgba(148, 163, 184, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+a {
+  color: var(--accent);
+}
+
+pre.response-text {
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 36px;
+}
+
+.transcript-label,
+.assistant-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.kv {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.kv dt {
+  color: var(--muted);
+}
+
+.kv dd {
+  margin: 0;
+}
+
+.timeline {
+  margin: 0;
+  padding: 0 0 0 16px;
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.timeline li {
+  list-style: decimal;
+  color: var(--fg);
+}
+
+.timeline .evt-type {
+  color: var(--accent);
+}
+
+.timeline .evt-error {
+  color: var(--danger);
+}
+
+.timeline .evt-time {
+  color: var(--muted);
+  margin-right: 6px;
+}
+
+.timeline .evt-payload {
+  color: var(--muted);
+  margin-left: 6px;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-family: var(--mono);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.chip.ok {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.chip.warn {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+#upload-status,
+#mic-status {
+  min-height: 18px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+#upload-status.error,
+#mic-status.error {
+  color: var(--danger);
+}
+
+#upload-status.ok,
+#mic-status.ok {
+  color: var(--success);
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.toggle input {
+  accent-color: var(--accent);
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
