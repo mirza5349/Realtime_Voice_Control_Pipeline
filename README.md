@@ -1,12 +1,12 @@
 # local-voice-ai-pipeline
 
-Minimal FastAPI scaffold for a local voice-to-AI-to-action demo. The backend bundles local STT, local LLM orchestration, low-fidelity simulator execution, short-lived local TTS artifact delivery, and a lightweight demo UI for client walkthroughs.
+Minimal FastAPI scaffold for a local voice-to-AI-to-action project. The backend bundles local STT, local LLM orchestration, low-fidelity simulator execution, short-lived local TTS artifact delivery, and a lightweight project UI for client walkthroughs.
 
 ## Requirements
 
 - Python 3.10+
 - `uv`
-- Optional: `docker` with Compose plugin, plus local `whisper.cpp`, `piper`, and `ollama` installations for end-to-end demos
+- Optional: `docker` with Compose plugin, plus local `whisper.cpp`, `piper`, and `ollama` installations for end-to-end projects
 
 ## Setup
 
@@ -23,21 +23,21 @@ make run
 
 The API will start at `http://127.0.0.1:8000`.
 
-### Demo UI
+### project UI
 
 ```bash
-make run-demo
+make run-project
 ```
 
-Open `http://127.0.0.1:8000/demo` in a browser. The page lets you create a session, open the websocket stream, upload audio (or pick a bundled sample), watch the event timeline, and inspect the assistant text, audio playback, simulator state, and stage latency side-by-side.
+Open `http://127.0.0.1:8000/project` in a browser. The page lets you create a session, open the websocket stream, upload audio (or pick a bundled sample), watch the event timeline, and inspect the assistant text, audio playback, simulator state, and stage latency side-by-side.
 
-### Demo Assets
+### project Assets
 
 ```bash
-make demo-assets
+make project-assets
 ```
 
-Seeds `.data/demo_assets/` with a small sample wav so the UI always has something to upload even without real recordings.
+Seeds `.data/project_assets/` with a small sample wav so the UI always has something to upload even without real recordings.
 
 ### Docker
 
@@ -46,7 +46,7 @@ make docker-build
 make docker-up
 ```
 
-The compose stack exposes `http://127.0.0.1:8000/demo` and mounts `.data/` for persistence. External binaries (`whisper.cpp`, `piper`, `ollama`) are expected to be served by the host; override `OLLAMA_BASE_URL` or mount volumes to wire them in. Use `make docker-down` to tear it down.
+The compose stack exposes `http://127.0.0.1:8000/project` and mounts `.data/` for persistence. External binaries (`whisper.cpp`, `piper`, `ollama`) are expected to be served by the host; override `OLLAMA_BASE_URL` or mount volumes to wire them in. Use `make docker-down` to tear it down.
 
 ## Developer Commands
 
@@ -54,23 +54,23 @@ The compose stack exposes `http://127.0.0.1:8000/demo` and mounts `.data/` for p
 make test
 make lint
 make format
-make demo AUDIO=./sample.wav
+make project AUDIO=./sample.wav
 ```
 
 ## API Endpoints
 
 - `GET /health`
-- `GET /demo`
+- `GET /project`
 - `POST /api/v1/sessions`
 - `GET /api/v1/sessions/{session_id}`
 - `POST /api/v1/sessions/{session_id}/transcriptions`
 - `GET /api/v1/sessions/{session_id}/diagnostics`
 - `GET /api/v1/audio/{asset_id}`
 - `GET /api/v1/metrics/summary`
-- `GET /api/v1/demo/context`
-- `GET /api/v1/demo/samples`
-- `GET /api/v1/demo/samples/{name}`
-- `GET /api/v1/demo/sessions/{session_id}/overview`
+- `GET /api/v1/project/context`
+- `GET /api/v1/project/samples`
+- `GET /api/v1/project/samples/{name}`
+- `GET /api/v1/project/sessions/{session_id}/overview`
 - `POST /api/v1/sessions/{session_id}/live-audio/start`
 - `POST /api/v1/sessions/{session_id}/live-audio/stop`
 - `POST /api/v1/sessions/{session_id}/live-audio`
@@ -120,26 +120,26 @@ AUDIO_FILE_TTL_SECONDS=3600
 
 ## Observability Configuration
 
-Tune in-memory tracing and demo defaults through `.env`:
+Tune in-memory tracing and project defaults through `.env`:
 
 ```bash
 TRACE_HISTORY_LIMIT=100
 METRICS_RETENTION_LIMIT=500
-DEMO_RUNNER_TIMEOUT_SECONDS=60
+project_RUNNER_TIMEOUT_SECONDS=60
 ```
 
-## Demo UX Configuration
+## project UX Configuration
 
 ```bash
-DEMO_MODE=true
-DEMO_AUTO_CLEANUP_AUDIO=true
-DEMO_STARTUP_VALIDATE_PROVIDERS=true
-DEMO_SAMPLES_DIR=.data/demo_assets
-DEMO_SAMPLES_PUBLIC_PATH=/api/v1/demo/samples
-DEMO_CLEANUP_INTERVAL_SECONDS=300
+project_MODE=true
+project_AUTO_CLEANUP_AUDIO=true
+project_STARTUP_VALIDATE_PROVIDERS=true
+project_SAMPLES_DIR=.data/project_assets
+project_SAMPLES_PUBLIC_PATH=/api/v1/project/samples
+project_CLEANUP_INTERVAL_SECONDS=300
 ```
 
-When `DEMO_AUTO_CLEANUP_AUDIO=true` the application periodically deletes expired audio artifacts in the background. `DEMO_STARTUP_VALIDATE_PROVIDERS=true` emits warnings at startup when the configured STT, LLM, or TTS provider binaries or models cannot be located, so missing local dependencies surface clearly before the first interaction.
+When `project_AUTO_CLEANUP_AUDIO=true` the application periodically deletes expired audio artifacts in the background. `project_STARTUP_VALIDATE_PROVIDERS=true` emits warnings at startup when the configured STT, LLM, or TTS provider binaries or models cannot be located, so missing local dependencies surface clearly before the first interaction.
 
 ## Live Microphone Configuration
 
@@ -152,7 +152,7 @@ LIVE_AUDIO_AUTOPLAY_DEFAULT=true
 LIVE_AUDIO_SILENCE_WINDOW_MS=1200
 ```
 
-The demo UI supports browser-native microphone capture with silence-based utterance segmentation. Each detected utterance is posted to `POST /api/v1/sessions/{session_id}/live-audio` (multipart `file` + `duration_ms`), enqueued per session, and processed serially through the same STT → LLM → simulator → TTS pipeline used for file uploads. Live websocket events (`live_audio.started`, `live_audio.utterance_captured`, `live_audio.processing_started`, `live_audio.processing_completed`, `live_audio.idle`) expose microphone state without replacing the existing event flow. Set `LIVE_AUDIO_AUTOPLAY_DEFAULT=false` to disable immediate playback of assistant audio.
+The project UI supports browser-native microphone capture with silence-based utterance segmentation. Each detected utterance is posted to `POST /api/v1/sessions/{session_id}/live-audio` (multipart `file` + `duration_ms`), enqueued per session, and processed serially through the same STT → LLM → simulator → TTS pipeline used for file uploads. Live websocket events (`live_audio.started`, `live_audio.utterance_captured`, `live_audio.processing_started`, `live_audio.processing_completed`, `live_audio.idle`) expose microphone state without replacing the existing event flow. Set `LIVE_AUDIO_AUTOPLAY_DEFAULT=false` to disable immediate playback of assistant audio.
 
 ## Quick Check
 
@@ -204,27 +204,27 @@ ollama serve
 ollama pull llama3.2:3b
 ```
 
-## Demo Runner
+## project Runner
 
 With the server running, execute a repeatable end-to-end check:
 
 ```bash
-make demo AUDIO=./sample.wav
+make project AUDIO=./sample.wav
 ```
 
 Or run the CLI directly:
 
 ```bash
-uv run local-voice-ai-demo ./sample.wav --base-url http://127.0.0.1:8000
+uv run local-voice-ai-project ./sample.wav --base-url http://127.0.0.1:8000
 ```
 
 ## Recording a Client Walkthrough
 
 Suggested sequence for capturing a polished client-facing recording:
 
-1. Start a fresh shell and run `make demo-assets` to seed `.data/demo_assets/`.
-2. Start the server with `make run-demo` (or `docker compose up`) so the `/demo` UI is reachable.
-3. Open `http://127.0.0.1:8000/demo` in a clean browser profile, and resize the window to 1280x800 for consistent framing.
+1. Start a fresh shell and run `make project-assets` to seed `.data/project_assets/`.
+2. Start the server with `make run-project` (or `docker compose up`) so the `/project` UI is reachable.
+3. Open `http://127.0.0.1:8000/project` in a clean browser profile, and resize the window to 1280x800 for consistent framing.
 4. Hit record on your screen capture tool (OBS, QuickTime, or similar).
 5. Narrate and click through the UI in this order:
    - Show the service/environment header and provider chips.
@@ -336,15 +336,15 @@ After a successful transcription, the pipeline emits:
 ├── README.md
 ├── pyproject.toml
 ├── scripts
-│   ├── prepare_demo_assets.sh
-│   └── run_demo.sh
+│   ├── prepare_project_assets.sh
+│   └── run_project.sh
 ├── src
 │   └── app
 │       ├── api
 │       │   ├── router.py
 │       │   ├── routes
 │       │   │   ├── audio.py
-│       │   │   ├── demo.py
+│       │   │   ├── project.py
 │       │   │   ├── health.py
 │       │   │   ├── metrics.py
 │       │   │   ├── session.py
@@ -353,7 +353,7 @@ After a successful transcription, the pipeline emits:
 │       │       ├── __init__.py
 │       │       └── routes.py
 │       ├── cli
-│       │   └── demo_runner.py
+│       │   └── project_runner.py
 │       ├── core
 │       │   ├── config.py
 │       │   └── logging.py
@@ -361,7 +361,7 @@ After a successful transcription, the pipeline emits:
 │       ├── models
 │       │   ├── action.py
 │       │   ├── audio.py
-│       │   ├── demo.py
+│       │   ├── project.py
 │       │   ├── events.py
 │       │   ├── llm.py
 │       │   ├── metrics.py
@@ -372,7 +372,7 @@ After a successful transcription, the pipeline emits:
 │       ├── services
 │       │   ├── audio_store.py
 │       │   ├── connection_manager.py
-│       │   ├── demo_service.py
+│       │   ├── project_service.py
 │       │   ├── diagnostics_service.py
 │       │   ├── event_bus.py
 │       │   ├── execution_service.py
@@ -398,13 +398,13 @@ After a successful transcription, the pipeline emits:
 │       │   └── tts_service.py
 │       └── web
 │           ├── static
-│           │   ├── demo.css
-│           │   └── demo.js
+│           │   ├── project.css
+│           │   └── project.js
 │           └── templates
-│               └── demo.html
+│               └── project.html
 └── tests
     ├── test_audio_asset_http.py
-    ├── test_demo_ui_http.py
+    ├── test_project_ui_http.py
     ├── test_end_to_end_diagnostics.py
     ├── test_execution_ws_flow.py
     ├── test_health.py
