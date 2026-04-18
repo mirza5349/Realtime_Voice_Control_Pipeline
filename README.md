@@ -1,3 +1,4 @@
+<img width="1565" height="1103" alt="image" src="https://github.com/user-attachments/assets/3f63497f-3d12-427f-9240-c6d8613e8e58" />
 # local-voice-ai-pipeline
 
 Minimal FastAPI scaffold for a local voice-to-AI-to-action project. The backend bundles local STT, local LLM orchestration, low-fidelity simulator execution, short-lived local TTS artifact delivery, and a lightweight project UI for client walkthroughs.
